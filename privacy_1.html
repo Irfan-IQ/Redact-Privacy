@@ -1,0 +1,313 @@
+<title>Redact Agent Privacy</title>
+<style>
+  /* Layout: single narrow reading column, system-doc feel, tight hierarchy via type scale + section numbers */
+
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --fg: #1b1d20;
+    --fg-muted: #5a5f66;
+    --fg-faint: #8a8f96;
+    --rule: #e6e3dc;
+    --accent: #2f6d4b;
+    --mark: #f1efe8;
+    --radius: 10px;
+    --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121316;
+      --surface: #1a1c20;
+      --fg: #ecebe8;
+      --fg-muted: #a3a7ad;
+      --fg-faint: #70747b;
+      --rule: #2a2d33;
+      --accent: #7cc296;
+      --mark: #22252a;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121316;
+    --surface: #1a1c20;
+    --fg: #ecebe8;
+    --fg-muted: #a3a7ad;
+    --fg-faint: #70747b;
+    --rule: #2a2d33;
+    --accent: #7cc296;
+    --mark: #22252a;
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding-inline: 24px;
+    padding-block: 56px 96px;
+  }
+
+  header.doc {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .eyebrow .dot { color: var(--accent); }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(40px, 7vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 14px 0 10px;
+    text-wrap: balance;
+  }
+  .lede {
+    color: var(--fg-muted);
+    font-size: 17px;
+    max-width: 56ch;
+    text-wrap: pretty;
+  }
+
+  section {
+    margin-top: 44px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    margin: 0 0 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  h2 .num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    min-width: 2.5ch;
+  }
+  h3 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+    margin: 22px 0 6px;
+    color: var(--fg);
+  }
+
+  p { margin: 10px 0; }
+  p + p { margin-top: 12px; }
+
+  ul {
+    margin: 10px 0;
+    padding-left: 1.1em;
+  }
+  li { margin: 6px 0; }
+  li::marker { color: var(--fg-faint); }
+
+  strong { font-weight: 600; }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+  }
+  a:hover { text-decoration-thickness: 2px; }
+
+  .callout {
+    background: var(--mark);
+    border-left: 2px solid var(--accent);
+    border-radius: 2px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 14.5px;
+    color: var(--fg-muted);
+  }
+  .callout strong { color: var(--fg); }
+
+  .table-of-rows {
+    border-top: 1px solid var(--rule);
+    margin-top: 14px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .row .k {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--fg-faint);
+    text-transform: uppercase;
+  }
+  .row .v { color: var(--fg); font-size: 15px; }
+  @media (max-width: 520px) {
+    .row { grid-template-columns: 1fr; gap: 4px; }
+  }
+
+  footer.doc {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    color: var(--fg-faint);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    a { transition: text-decoration-thickness 120ms ease; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<main class="page">
+  <header class="doc">
+    <div class="eyebrow">
+      <span>Redact Agent</span>
+      <span class="dot">·</span>
+      <span>Effective 2 October 2026</span>
+    </div>
+    <h1>Privacy Policy</h1>
+    <p class="lede">Redact Agent is a Chrome extension that detects and redacts personally identifiable information on web pages. This page explains what the extension sees, where it goes, and how long it stays.</p>
+  </header>
+
+  <section>
+    <h2><span class="num">01</span>Who we are</h2>
+    <p>Redact Agent is built and maintained by Redact Rosters as part of Smart India Hackathon problem statement SIH26171. For questions about this policy or your data, contact <a href="mailto:iamiq07@gmail.com">iamiq07@gmail.com</a>.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">02</span>What the extension accesses</h2>
+    <p>Redact Agent only acts on the page you explicitly run it on, after you click <em>Run</em> in the side panel. It never reads tabs or pages in the background.</p>
+    <div class="table-of-rows">
+      <div class="row">
+        <div class="k">Page content</div>
+        <div class="v">Text and DOM of the active tab, so PII patterns (emails, phone numbers, names, IDs) can be detected and visually redacted in place.</div>
+      </div>
+      <div class="row">
+        <div class="k">Page metadata</div>
+        <div class="v">URL and title of the active tab, used to let the agent report which page a task was run on.</div>
+      </div>
+      <div class="row">
+        <div class="k">Your task input</div>
+        <div class="v">The natural-language instruction you type into the side panel ("redact all PII on this page", "scan &amp; report").</div>
+      </div>
+      <div class="row">
+        <div class="k">Local settings</div>
+        <div class="v">Enabled redaction categories, allowlisted domains, selected mode, and recent task history. Stored with <code>chrome.storage</code> on your device.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">03</span>What we do not collect</h2>
+    <ul>
+      <li>Passwords, PINs, or any value typed into a password field</li>
+      <li>Payment or financial details</li>
+      <li>Health information</li>
+      <li>Geolocation, GPS, or precise location</li>
+      <li>Keystrokes, mouse movements, scroll positions, or any form of behavioural telemetry</li>
+      <li>Analytics identifiers, advertising IDs, or third-party trackers</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">04</span>Server-side processing</h2>
+    <p>To perform redaction and page understanding, the extension sends your task instruction, the extracted page text, and a screenshot of the active tab to a backend service operated by Redact Rosters. The backend runs a vision-language model that returns the final redaction plan, which the extension then applies locally in your browser.</p>
+    <div class="callout">
+      <strong>Pre-redaction before upload.</strong> The screenshot is scanned on-device first. PII that our local detector finds (emails, phone numbers, identifiers) is visually masked in the image <em>before</em> it leaves the browser, so the server never receives an unredacted image of your page. The backend only sees what the local pass could not confidently resolve.</div>
+    <p><strong>What leaves your browser:</strong> page text, the locally pre-redacted screenshot of the active tab, and your typed instruction. <strong>What does not leave:</strong> content from any tab you have not explicitly run the agent on, your Chrome history, cookies, or any form input you have not submitted to Redact Agent.</p>
+    <p>Backend communication happens over HTTPS. The server receives the standard IP address and user-agent attached to any web request; these are used only to serve the response and are not combined with content payloads.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">05</span>Retention</h2>
+    <p>Content you send to the backend is <strong>processed in memory and discarded as soon as the response is returned</strong>. The server does not write page text, screenshots, or instructions to disk, and keeps no logs of their contents. The only server-side records are aggregate request counts for capacity planning, which contain no page data of any kind.</p>
+    <p>Local settings and task history remain in your browser until you clear them by removing the extension from <code>chrome://extensions</code>.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">06</span>We do not sell or share your data</h2>
+    <ul>
+      <li>We do not sell user data to anyone.</li>
+      <li>We do not share it with third parties for marketing, advertising, or any purpose unrelated to redaction.</li>
+      <li>We do not use it to determine creditworthiness or for lending.</li>
+      <li>We do not use your page content, screenshots, or instructions to train, fine-tune, or evaluate any model &mdash; ours or anyone else's &mdash; under any circumstances.</li>
+    </ul>
+    <p>The only parties who process your data are Redact Rosters and the hosting provider our backend runs on, strictly to deliver the redaction response.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">07</span>Your choices</h2>
+    <ul>
+      <li><strong>Pause the extension.</strong> Redact Agent only acts on explicit Run clicks. Not clicking Run keeps your pages untouched.</li>
+      <li><strong>Allowlist domains.</strong> Add domains you never want the extension to run on in the side panel settings.</li>
+      <li><strong>Clear local data.</strong> Remove the extension from <code>chrome://extensions</code> to wipe all settings and task history stored in your browser.</li>
+      <li><strong>Contact us.</strong> Email <a href="mailto:iamiq07@gmail.com">iamiq07@gmail.com</a> for any question or request about your data. Because the backend keeps no logs of content, there is nothing server-side to delete.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">08</span>Children</h2>
+    <p>Redact Agent is not directed at children under 13 and we do not knowingly collect data from them. If you believe a child has used the extension and you want their data removed, contact us.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">09</span>Changes to this policy</h2>
+    <p>If this policy changes, the <em>Effective</em> date at the top of this page will change too. Material changes will also be noted in the extension's description on the Chrome Web Store before they take effect.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">10</span>Contact</h2>
+    <p>Email <a href="mailto:iamiq07@gmail.com">iamiq07@gmail.com</a> for any question about this policy, a data request, or a security report.</p>
+  </section>
+
+  <footer class="doc">
+    <span>Redact Agent · Redact Rosters</span>
+    <span>v1.0 · 2026-10-02</span>
+  </footer>
+</main>
